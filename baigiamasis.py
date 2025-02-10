@@ -82,7 +82,8 @@ def execute_query(database_name, query):
         conn.commit()
 
 
-def preparation_data_for_database(header, input_data, output_data):
+def preparation_data_for_database(header, input_data):
+    output_data = []
     for data in input_data:
         dict_data = {}
         for header, value in zip(HEADERS_ORDERS, data):
@@ -138,11 +139,9 @@ if data_orders:
         print("Nera duomenu")
 
 
-data_for_orders_database = []
-preparation_data_for_database(
+data_for_orders_database = preparation_data_for_database(
     header=HEADERS_ORDERS,
     input_data=sorted_orders,
-    output_data=data_for_orders_database,
 )
 print_data_for_database(data_for_database=data_for_orders_database)
 
