@@ -10,10 +10,10 @@ from googleapiclient.errors import HttpError
 
 class GoogleSheetsClient:
     SCOPES = [
-         "https://www.googleapis.com/auth/spreadsheets.readonly",
+        "https://www.googleapis.com/auth/spreadsheets.readonly",
     ]
     TOKEN_PATH = r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\creds\token.json"  # Save token here
-    CREDENTIALS_PATH = r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\creds\client_secret.json" 
+    CREDENTIALS_PATH = r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\creds\client_secret.json"
 
     def __init__(self):
         self.creds = None
@@ -24,7 +24,7 @@ class GoogleSheetsClient:
         """Authenticate user and get Gmail API service."""
         if os.path.exists(self.TOKEN_PATH):
             self.creds = Credentials.from_authorized_user_file(
-                filename=self.TOKEN_PATH, scopes=self.SCOPES          
+                filename=self.TOKEN_PATH, scopes=self.SCOPES
             )
 
         if not self.creds or not self.creds.valid:
@@ -41,13 +41,17 @@ class GoogleSheetsClient:
                 token.write(self.creds.to_json())
 
         # Initialize Gmail API service
-        self.service = build("sheets", "v4", credentials = self.creds)
+        self.service = build("sheets", "v4", credentials=self.creds)
 
     def get_sheet_data(self, spreadsheet_id, sheet_range):
         """Fetch data from a specific Google Sheet."""
         try:
             sheet = self.service.spreadsheets()
-            result = sheet.values().get(spreadsheetId=spreadsheet_id, range=sheet_range).execute()
+            result = (
+                sheet.values()
+                .get(spreadsheetId=spreadsheet_id, range=sheet_range)
+                .execute()
+            )
             values = result.get("values", [])
 
             if not values:
