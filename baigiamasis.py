@@ -76,13 +76,6 @@ def check_data_in_database_table(database_name, table_name):
          print(row)
        conn.close()
 
-def add_data_in_data_base(database_name, input_data, input_information):
- with sqlite3.connect(database_name) as conn:
-    c = conn.cursor()
-    for data in input_data:
-        c.execute(f"{input_information}")
-    conn.commit()  
-
 
 sorted_orders = []
 if data_orders:
@@ -115,29 +108,37 @@ create_database_table(database_name=my_database, table_data=table_clients)
 create_database_table(database_name=my_database, table_data=table_bank)
 
 
+def execute_query(database_name, query):
+ with sqlite3.connect(database_name) as conn:
+    c = conn.cursor()
+    c.execute(query)
+    conn.commit()  
+
+input_data_bank = f'''INSERT INTO Bankai (Name, Code, SWIFT, Account_Nr)
+             VALUES ('{row["Name"]}', '{row["Code"]}', '{row["WIFT"]}', '{row["Account_Nr"]}')'''
+
+for row in data_for_bank_database:
+   execute_query(database_name=my_database, query=input_data_bank)
+
 
 input_data_clients = f'''INSERT INTO Klientai 
     (Klientas, Code, "Vat_code", Adresas, Emailas, "Shipping_adress", PVM, "Apmokejimo_terminas", Atsakingas, Telefonas, Bankas, "Išankstinis_mok") 
-    VALUES ('{data["Klientas"]}', '{data["Code"]}', '{data["Vat_code"]}', '{data["Adresas"]}', 
-            '{data["Emailas"]}', '{data["Shipping_adress"]}', '{data["PVM"]}', '{data["Apmokejimo_terminas"]}', 
-            '{data["Atsakingas"]}', '{data["Telefonas"]}', '{data["Bankas"]}', '{data["Išankstinis_mok"]}')'''
+    VALUES ('{row["Klientas"]}', '{row["Code"]}', '{row["Vat_code"]}', '{row["Adresas"]}', 
+            '{row["Emailas"]}', '{row["Shipping_adress"]}', '{row["PVM"]}', '{row["Apmokejimo_terminas"]}', 
+            '{row["Atsakingas"]}', '{row["Telefonas"]}', '{row["Bankas"]}', '{row["Išankstinis_mok"]}')'''
 
-
-input_data_bank = f'''INSERT INTO Bankai (Name, Code, SWIFT, Account_Nr)
-             VALUES ('{data["Name"]}', '{data["Code"]}', '{data["WIFT"]}', '{data["Account_Nr"]}')'''
+for row in data_for_clients_database:
+   execute_query(database_name=my_database, query=input_data_clients)
 
 
 input_data_orders = f'''INSERT INTO Uzsakymai (customer, order_Nr, shipping_day, project, 
             code, ver, description, description_LT, qty, measure, discount, price_Eur, shipping_adress)
- VALUES  ('{data["customer"]}', '{data["order_Nr"]}', '{data["shipping_day"]}', '{data["project"]}', 
-            '{data["code"]}', '{data["ver"]}', '{data["description"]}', '{data["description_LT"]}', 
-            '{data["qty"]}', '{data["measure"]}', '{data["discount"]}', '{data["price_Eur"]}', '{data["shipping_adress"]}')'''
+ VALUES  ('{row["customer"]}', '{row["order_Nr"]}', '{row["shipping_day"]}', '{row["project"]}', 
+            '{row["code"]}', '{row["ver"]}', '{row["description"]}', '{row["description_LT"]}', 
+            '{row["qty"]}', '{row["measure"]}', '{row["discount"]}', '{row["price_Eur"]}', '{row["shipping_adress"]}')'''
 
-
-
-add_data_in_data_base(database_name=my_database, input_data=data_for_bank_database, input_information=input_data_bank)
-add_data_in_data_base(database_name=my_database, input_data=data_for_clients_database, input_information=input_data_clients)
-add_data_in_data_base(database_name=my_database, input_data=data_for_orders_database, input_information=input_data_orders)
+for row in data_for_orders_database:
+   execute_query(database_name=my_database, query=input_data_orders)
 
 
 table_name_bank = "Bankai"
