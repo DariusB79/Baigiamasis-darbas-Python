@@ -11,4 +11,4 @@ def print_extracted_data(extracted_data):
         for row in extracted_data:
             print(row)
         else:
-            print("Nera duomenu")
+            print("Nera duomenu - tuscia lentele")
