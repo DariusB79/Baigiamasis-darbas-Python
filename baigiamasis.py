@@ -11,14 +11,22 @@ import sqlite3
 from tabulate import tabulate
 from IPython.display import HTML
 import logging
+import pdfkit
 from debug_functions import print_data_for_database, print_extracted_data
 from funkcijos import (
     execute_query,
     preparation_data_for_database,
     create_database_table,
     check_data_in_database_table,
+    get_data_for_invoice,
+    get_clients_names,
+    get_data_for_invoice_list
 )
 from klases import GoogleSheetsClient
+
+
+
+
 
 
 load_dotenv()
@@ -174,3 +182,42 @@ table_name_clients = "Klientai"
 check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_bank)
 check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_orders)
 check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_clients)
+
+
+
+
+#shipping_date = input(str("Iveskite norimo isvezimo data"))
+data_for_invoice = get_data_for_invoice(database_name=MY_DATABASE, date='2025/02/07')
+
+
+
+print(get_data_for_invoice(database_name=MY_DATABASE, date='2025/02/07'))
+
+print("Data for invoice")
+for n in data_for_invoice:
+    print(n[0], n[1],n[2]) 
+
+print("Data for invoice - PABAIGA")
+
+print("Data")
+print(get_clients_names(data_for_invoice))
+print("Data") 
+
+
+print("Klintu sarasas")
+print(get_clients_names(shipping_data=data_for_invoice))
+
+
+print("Duomenys saskaitos israsymui")
+for n in data_for_invoice:
+    print(n)
+    print()
+
+print("Testuojame funkcija")
+
+duomenys = get_data_for_invoice_list(database_name=MY_DATABASE, date='2025/02/07')
+for n in duomenys:
+    print(n)
+
+
+

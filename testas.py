@@ -1,4 +1,5 @@
 import sqlite3
+import pdfkit
 
 #with sqlite3.connect("dotekas.db") as conn:  # context manager
  #  c = conn.cursor()
@@ -95,4 +96,24 @@ with sqlite3.connect("dotekas.db") as conn: # context manager
 
 # for row in data_for_orders_database:
 #    execute_query(database_name=MY_DATABASE, query=input_data_orders)
+
+
+
+
+#eiluciu_sarasas_pagal_klienta = {
+#    "dotekas": [
+#        {"2021-05-01": ["eilute_1", "eilute_2"]},
+#         {"2021-06-01": ["eilute_1", "eilute_2"]} 
+#    ],
+#    "uab_elnias": [
+#        {"2021-05-01": ["eilute_1", "eilute_2"]},
+#         {"2021-06-01": ["eilute_1", "eilute_2"]} 
+#    ],
+#}
+#reikia_israsyti_sitom_imonem = list(eiluciu_sarasas_pagal_klienta.keys())
+#for klientas in reikia_israsyti_sitom_imonem:
+#	print(klientas, eiluciu_sarasas_pagal_klienta[klientas])
+#	for eilutes in eiluciu_sarasas_pagal_klienta[klientas]:
+#		print(eilutes.keys())
+#	break
 
