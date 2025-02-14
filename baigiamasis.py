@@ -22,11 +22,7 @@ from funkcijos import (
     get_clients_names,
     get_data_for_invoice_list
 )
-from klases import GoogleSheetsClient
-
-
-
-
+from klases import GoogleSheetsClient, GmailClient
 
 
 load_dotenv()
@@ -220,4 +216,20 @@ for n in duomenys:
     print(n)
 
 
+#if __name__ == "__main__":
+gmail_client = GmailClient()
+gmail_client.send_email_with_attachment(
+        to_email="d.balsevicius@gmail.com",
+        subject="Test Email with PDF Attachment",
+        content="Please find the attached PDF.",
+        file_path=r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\invoice_test.pdf"
+    )    
 
+
+
+gmail_client = GmailClient()
+gmail_client.send_email(
+    to_email="d.balsevicius@gmail.com",
+    subject="Testas saskaita",
+    content="This is an automated draft mail.",
+)

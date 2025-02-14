@@ -1,16 +1,20 @@
 import pdfkit
 from datetime import datetime, timedelta
 from funkcijos import  get_data_for_invoice_list
+from datetime import datetime
 
 data_for_invoice = get_data_for_invoice_list(database_name="dotekas.db", date='2025/02/07')
 for n in data_for_invoice:
    print(n)
 
+for n in data_for_invoice:
+    print(n)
+
 #client_name = input(str("Iveskite klienta kuriam israsinesite saskaita"))
 
 new_data = ((datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d"))
 
-invoice_number = "DOT"+datetime.now().strftime("%Y-%m-%d")
+invoice_number = "DOT" + datetime.now().strftime("%Y-%m-%d")
 
 invoice_html_data = f"""
 
@@ -234,8 +238,6 @@ invoice_html_data = f"""
 
 
 """
-
-
 
 
 options = {
