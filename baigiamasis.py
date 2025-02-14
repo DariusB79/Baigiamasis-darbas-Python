@@ -200,7 +200,7 @@ print(get_clients_names(data_for_invoice))
 print("Data") 
 
 
-print("Klintu sarasas")
+print("Klientu sarasas")
 print(get_clients_names(shipping_data=data_for_invoice))
 
 
@@ -225,11 +225,3 @@ gmail_client.send_email_with_attachment(
         file_path=r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\invoice_test.pdf"
     )    
 
-
-
-gmail_client = GmailClient()
-gmail_client.send_email(
-    to_email="d.balsevicius@gmail.com",
-    subject="Testas saskaita",
-    content="This is an automated draft mail.",
-)
