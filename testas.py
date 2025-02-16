@@ -1,27 +1,27 @@
 import sqlite3
 import pdfkit
 
-#with sqlite3.connect("dotekas.db") as conn:  # context manager
- #  c = conn.cursor()
+# with sqlite3.connect("dotekas.db") as conn:  # context manager
+#  c = conn.cursor()
 #   c.execute("DROP TABLE IF EXISTS Uzsakymai1")
 
 
 # Prisijungiame prie duomenų bazės
-#conn = sqlite3.connect("dotekas.db")
-#cursor = conn.cursor()
+# conn = sqlite3.connect("dotekas.db")
+# cursor = conn.cursor()
 # Pridedame naują stulpelį, pvz., "Komentaras" (TEXT tipo)
-#cursor.execute("ALTER TABLE Uzsakymai ADD COLUMN Invoice INTEGER;")
+# cursor.execute("ALTER TABLE Uzsakymai ADD COLUMN Invoice INTEGER;")
 # Išsaugome pakeitimus
-#conn.commit()
+# conn.commit()
 # Uždarome jungtį
-#conn.close()
+# conn.close()
 
-with sqlite3.connect("dotekas.db") as conn: # context manager
-  c = conn.cursor()
-  c.execute("DELETE FROM  Klientai")
-  c.execute("DELETE FROM  Bankai")
-  c.execute("DELETE FROM  Uzsakymai")
-  conn.commit()
+with sqlite3.connect("dotekas.db") as conn:  # context manager
+    c = conn.cursor()
+    c.execute("DELETE FROM  Klientai")
+    c.execute("DELETE FROM  Bankai")
+    c.execute("DELETE FROM  Uzsakymai")
+    conn.commit()
 
 # print(type(data_for_bank_database))
 # print(data_for_bank_database)
@@ -29,16 +29,10 @@ with sqlite3.connect("dotekas.db") as conn: # context manager
 # print(data.keys())
 
 
-
-
-
-
-#with sqlite3.connect("dotekas.db") as conn:
+# with sqlite3.connect("dotekas.db") as conn:
 #    c = conn.cursor()
 #    c.execute("PRAGMA table_info(Bankai)")
-#print(c.fetchall())
-
-
+# print(c.fetchall())
 
 
 # input_data_bank = f"""INSERT INTO Bankai (Name, Code, SWIFT, Account_Nr)
@@ -98,22 +92,19 @@ with sqlite3.connect("dotekas.db") as conn: # context manager
 #    execute_query(database_name=MY_DATABASE, query=input_data_orders)
 
 
-
-
-#eiluciu_sarasas_pagal_klienta = {
+# eiluciu_sarasas_pagal_klienta = {
 #    "dotekas": [
 #        {"2021-05-01": ["eilute_1", "eilute_2"]},
-#         {"2021-06-01": ["eilute_1", "eilute_2"]} 
+#         {"2021-06-01": ["eilute_1", "eilute_2"]}
 #    ],
 #    "uab_elnias": [
 #        {"2021-05-01": ["eilute_1", "eilute_2"]},
-#         {"2021-06-01": ["eilute_1", "eilute_2"]} 
+#         {"2021-06-01": ["eilute_1", "eilute_2"]}
 #    ],
-#}
-#reikia_israsyti_sitom_imonem = list(eiluciu_sarasas_pagal_klienta.keys())
-#for klientas in reikia_israsyti_sitom_imonem:
-#	print(klientas, eiluciu_sarasas_pagal_klienta[klientas])
-#	for eilutes in eiluciu_sarasas_pagal_klienta[klientas]:
-#		print(eilutes.keys())
-#	break
-
+# }
+# reikia_israsyti_sitom_imonem = list(eiluciu_sarasas_pagal_klienta.keys())
+# for klientas in reikia_israsyti_sitom_imonem:
+# 	print(klientas, eiluciu_sarasas_pagal_klienta[klientas])
+# 	for eilutes in eiluciu_sarasas_pagal_klienta[klientas]:
+# 		print(eilutes.keys())
+# 	break

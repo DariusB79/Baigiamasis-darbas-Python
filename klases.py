@@ -11,7 +11,6 @@ import base64
 from email.message import EmailMessage
 
 
-
 import os
 import base64
 import mimetypes
@@ -88,8 +87,6 @@ class GoogleSheetsClient:
             return []
 
 
-
-
 class GmailClient:
     SCOPES = [
         "https://www.googleapis.com/auth/gmail.send",
@@ -135,7 +132,12 @@ class GmailClient:
 
             with open(file_path, "rb") as file:
                 file_data = file.read()
-                message.add_attachment(file_data, maintype=main_type, subtype=sub_type, filename=os.path.basename(file_path))
+                message.add_attachment(
+                    file_data,
+                    maintype=main_type,
+                    subtype=sub_type,
+                    filename=os.path.basename(file_path),
+                )
 
             encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
             create_message = {"raw": encoded_message}
@@ -150,7 +152,3 @@ class GmailClient:
 
         except HttpError as error:
             print(f"An error occurred: {error}")
-
-
-
-

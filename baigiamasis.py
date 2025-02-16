@@ -20,7 +20,7 @@ from funkcijos import (
     check_data_in_database_table,
     get_data_for_invoice,
     get_clients_names,
-    get_data_for_invoice_list
+    get_data_for_invoice_list,
 )
 from klases import GoogleSheetsClient, GmailClient
 
@@ -60,7 +60,7 @@ HEADERS_ORDERS = [
     "discount",
     "price_Eur",
     "shipping_adress",
-    "Invoice"
+    "Invoice",
 ]
 HEADERS_CLIENTS = [
     "Klientas",
@@ -180,24 +180,21 @@ check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_or
 check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_clients)
 
 
+# shipping_date = input(str("Iveskite norimo isvezimo data"))
+data_for_invoice = get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07")
 
 
-#shipping_date = input(str("Iveskite norimo isvezimo data"))
-data_for_invoice = get_data_for_invoice(database_name=MY_DATABASE, date='2025/02/07')
-
-
-
-print(get_data_for_invoice(database_name=MY_DATABASE, date='2025/02/07'))
+print(get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07"))
 
 print("Data for invoice")
 for n in data_for_invoice:
-    print(n[0], n[1],n[2]) 
+    print(n[0], n[1], n[2])
 
 print("Data for invoice - PABAIGA")
 
 print("Data")
 print(get_clients_names(data_for_invoice))
-print("Data") 
+print("Data")
 
 
 print("Klientu sarasas")
@@ -211,17 +208,16 @@ for n in data_for_invoice:
 
 print("Testuojame funkcija")
 
-duomenys = get_data_for_invoice_list(database_name=MY_DATABASE, date='2025/02/07')
+duomenys = get_data_for_invoice_list(database_name=MY_DATABASE, date="2025/02/07")
 for n in duomenys:
     print(n)
 
 
-#if __name__ == "__main__":
+# if __name__ == "__main__":
 gmail_client = GmailClient()
 gmail_client.send_email_with_attachment(
-        to_email="d.balsevicius@gmail.com",
-        subject="Test Email with PDF Attachment",
-        content="Please find the attached PDF.",
-        file_path=r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\invoice_test.pdf"
-    )    
-
+    to_email="d.balsevicius@gmail.com",
+    subject="Test Email with PDF Attachment",
+    content="Please find the attached PDF.",
+    file_path=r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\invoice_test.pdf",
+)
