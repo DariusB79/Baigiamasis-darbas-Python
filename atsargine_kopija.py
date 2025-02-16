@@ -466,3 +466,73 @@ check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_cl
             print(f"An error occurred: {error}")
 
 
+
+
+
+
+
+
+
+
+<tbody>
+                    <tr>
+                        <td style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[0][7]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[0][9]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                             {client_data_for_invoice[0][12]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[0][11]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            45
+                        </td>
+                        <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                            USD 450.00
+                        </td>
+                    </tr>
+             <tr>
+                        <td style="border-top: 1px solid #eee; padding: 5px;">
+                           {client_data_for_invoice[1][7]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[1][9]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[1][12]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[1][11]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            45
+                        </td>
+                        <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                            USD 450.00
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[2][7]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[2][9]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[2][12]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            {client_data_for_invoice[2][11]}
+                        </td>
+                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
+                            45
+                        </td>
+                        <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
+                            USD 450.00
+                        </td>
+                    </tr>
+                </tbody>

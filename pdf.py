@@ -25,6 +25,21 @@ html_image = f'<img src="data:image/jpeg;base64,{base64_string}" alt="Company Lo
 #print("Paveiskliuko Testas 3 ")
 #print()
 
+
+
+# client_name = input(str("Iveskite klienta kuriam israsinesite saskaita"))
+
+new_data = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
+
+invoice_number = "DOT" + datetime.now().strftime("%Y-%m-%d")
+
+
+
+
+
+
+
+
 client_data_for_invoice = get_client_data_for_invoice(database_name="dotekas.db", name = "Preveda AS")
 #print()
 #print()
@@ -54,7 +69,7 @@ print()
 print(clients_names_for_invoice)
 print()
 
-data_for_invoice = get_invoice_data_by_client_name(data=data_for_todays_shipment, name="Preveda AS")
+data_for_invoice = get_invoice_data_by_client_name(data=data_for_todays_shipment, name="J. de Jager & Zonen BV")
 
 print()
 print("Siandienos isvezimo duomenys pagal klineta")
@@ -65,11 +80,39 @@ print()
 print("Pabaiga")
 print()
 
-# client_name = input(str("Iveskite klienta kuriam israsinesite saskaita"))
 
-new_data = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
 
-invoice_number = "DOT" + datetime.now().strftime("%Y-%m-%d")
+
+
+html_table_row = ""
+for item in data_for_invoice:
+    print(type(item), item)  # Debug info
+
+    # Jei 'Price_Eur' tuščias, nustatome į 0 ir pašaliname simbolius
+    price = float(item['Price_Eur'].replace("€", "").replace(",", "").strip()) if item['Price_Eur'] else 0
+
+    # Jei 'Discount' tuščias, nustatome į 0 ir pašaliname simbolius
+    discount = float(item['Discount'].replace("%", "").strip()) / 100 if item['Discount'] else 0  
+
+    # Apskaičiuojame kainą su nuolaida
+    discounted_price = price * (1 - discount)
+
+    # Apskaičiuojame bendrą sumą
+    total_price = discounted_price * item['Qty']
+
+    html_table_row += f"""
+    <tr>
+        <td style="border-top: 1px solid #eee; padding: 5px;">{item['Description']}</td>
+        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">{item['Qty']}</td>
+        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">{price:.2f}</td>
+        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">{discount * 100:.0f}%</td>
+        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">{discounted_price:.2f}</td>
+        <td align="right" style="border-top: 1px solid #eee; padding: 5px;">{total_price:.2f}</td>
+    </tr>
+    """
+
+
+
 
 invoice_html_data = f"""
 
@@ -181,84 +224,25 @@ invoice_html_data = f"""
                             Qty / Hr
                         </th>
                         <th align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                           Unit Price
+                           Unit Price, Eur
                         </th>
                         <th align="center" style="border-top: 1px solid #eee; padding: 5px;">
                             Discount
                         </th>
                         <th align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            Unit Price with Discount
+                            Unit Price with Discount, EUR
                         </th>
                         <th align="right" style="border-top: 1px solid #eee; padding: 5px;">
-                            Amount
+                            Amount,Eur
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td style="border-top: 1px solid #eee; padding: 5px;">
-                            Gaminys Nr.1
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            10
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            50
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            10%
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            45
-                        </td>
-                        <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
-                            USD 450.00
-                        </td>
-                    </tr>
-             <tr>
-                        <td style="border-top: 1px solid #eee; padding: 5px;">
-                            Gaminys Nr.2
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            10
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            50
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            10%
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            45
-                        </td>
-                        <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
-                            USD 450.00
-                        </td>
-                    </tr>
-                     <tr>
-                        <td style="border-top: 1px solid #eee; padding: 5px;">
-                            Gaminys Nr.3
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            10
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            50
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            10%
-                        </td>
-                        <td align="center" style="border-top: 1px solid #eee; padding: 5px;">
-                            45
-                        </td>
-                        <td align="right" style="border-top: 1px solid #eee; padding: 5px;">
-                            USD 450.00
-                        </td>
-                    </tr>
+                  {html_table_row}
                 </tbody>
             </table>
         </div>
-
+        
         <div style="border-top: 1px solid #eee;">
             <table style="table-layout: fixed; width: 100%; border-collapse: collapse;">
                 <tbody>
@@ -267,7 +251,7 @@ invoice_html_data = f"""
                             Subtotal
                         </td>
                         <td align="right" width="20%" style="padding: 5px;">
-                            1350  
+                            1500.00   
                         </td>
                     </tr>
                     <tr>
@@ -275,7 +259,7 @@ invoice_html_data = f"""
                             + TAX    
                         </td>
                         <td align="right" width="20%" style="padding: 5px;">
-                            0   
+                            5.00   
                         </td>
                     </tr>
                     <tr>
@@ -286,7 +270,7 @@ invoice_html_data = f"""
                         </td>
                         <td align="right" width="20%" style="border-top: 2px solid #eee; padding: 8px;">
                             <strong style="font-size: 16pt;">
-                                USD 1350
+                                USD 1495.00
                             </strong>
                         </td>
                     </tr>
