@@ -279,9 +279,9 @@ config = pdfkit.configuration(
     wkhtmltopdf=r"C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe"
 )
 
-with open("invoice_test.html", "w", encoding="utf-8") as file:
+with open("invoice.html", "w", encoding="utf-8") as file:
     file.write(invoice_html_data)
 
-pdfkit.from_file("invoice_test.html", "invoice_test.pdf")
+pdfkit.from_file("invoice.html", "invoice.pdf")
 
 print("PDF sukurtas sėkmingai!")

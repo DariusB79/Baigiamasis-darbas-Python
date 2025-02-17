@@ -217,5 +217,5 @@ gmail_client.send_email_with_attachment(
     to_email="d.balsevicius@gmail.com",
     subject="Please find atached invoice for your orders",
     content="Hello,\n \n Please find atached invoice for your orders \n\n Have a nice day \n BR, \n Darius Balsevicius",
-    file_path=r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\invoice_test.pdf",
+    file_path=r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\invoice.pdf",
 )
