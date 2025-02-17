@@ -30,7 +30,7 @@ client_data_for_invoice = get_client_data_for_invoice(
 )
 
 data_for_todays_shipment = get_data_for_invoice(
-    database_name="dotekas.db", date="2025/02/07", as_dict = True
+    database_name="dotekas.db", date="2025/02/07", as_dict=True
 )
 
 checking_type_and_data(data=data_for_todays_shipment)

@@ -80,9 +80,9 @@ HEADERS_BANK = ["Name", "Code", "SWIFT", "Account_Nr"]
 data_orders = sheets_client.get_sheet_data(spreadsheet_id_orders, range_name_orders)
 data_clients = sheets_client.get_sheet_data(spreadsheet_id_clients, range_name_clients)
 data_bank = sheets_client.get_sheet_data(spreadsheet_id_bank, range_name_bank)
-#print_extracted_data(extracted_data=data_orders)
-#print_extracted_data(extracted_data=data_clients)
-#print_extracted_data(extracted_data=data_bank)
+# print_extracted_data(extracted_data=data_orders)
+# print_extracted_data(extracted_data=data_clients)
+# print_extracted_data(extracted_data=data_bank)
 
 sorted_orders = []
 if data_orders:
@@ -107,24 +107,24 @@ if data_orders:
     else:
         print("Nera duomenu")
 
-#print_extracted_data(sorted_orders)
+# print_extracted_data(sorted_orders)
 
 data_for_orders_database = preparation_data_for_database(
     header=HEADERS_ORDERS, input_data=sorted_orders
 )
-#print_data_for_database(data_for_orders_database)
+# print_data_for_database(data_for_orders_database)
 
 
 data_for_clients_database = preparation_data_for_database(
     header=HEADERS_CLIENTS, input_data=data_clients
 )
-#print_data_for_database(data_for_database=data_for_clients_database)
+# print_data_for_database(data_for_database=data_for_clients_database)
 
 
 data_for_bank_database = preparation_data_for_database(
     header=HEADERS_BANK, input_data=data_bank
 )
-#print_data_for_database(data_for_database=data_for_bank_database)
+# print_data_for_database(data_for_database=data_for_bank_database)
 
 
 create_database_table(database_name=MY_DATABASE, table_data=table_orders)
@@ -140,9 +140,7 @@ for row in data_for_bank_database:
 
 
 for row in data_for_clients_database:
-    input_data_clients = (
-        input_data_clients
-    ) = f"""
+    input_data_clients = input_data_clients = f"""
 INSERT INTO Klientai
    (Klientas, Code, "Vat_code", Adresas, Emailas, "Shipping_adress", PVM,
     "Apmokejimo_terminas", Atsakingas, Telefonas, Bankas, "Išankstinis_mok")
@@ -152,7 +150,6 @@ INSERT INTO Klientai
     '{row.get("Atsakingas", "")}', '{row.get("Telefonas", "")}', '{row.get("Bankas", "")}', '{row.get("Išankstinis_mok", "")}')
  """
     create_database_table(database_name=MY_DATABASE, table_data=input_data_clients)
-
 
 
 for row in data_for_orders_database:
