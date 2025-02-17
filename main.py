@@ -14,13 +14,11 @@ import logging
 import pdfkit
 from debug_helpers import print_data_for_database, print_extracted_data
 from helpers import (
-    execute_query,
     preparation_data_for_database,
     create_database_table,
     check_data_in_database_table,
     get_data_for_invoice,
     get_clients_names,
-    get_data_for_invoice_list,
 )
 from klases import GoogleSheetsClient, GmailClient
 
@@ -138,7 +136,7 @@ for row in data_for_bank_database:
     input_data_bank = f"""INSERT INTO Bankai (Name, Code, SWIFT, Account_Nr)
                 VALUES ('{row["Name"]}', '{row["Code"]}', '{row["SWIFT"]}', '{row["Account_Nr"]}')"""
     print(input_data_bank)  # Tikriname, ar teisingai sugeneruoti SQL įrašai
-    execute_query(database_name=MY_DATABASE, query=input_data_bank)
+    create_database_table(database_name=MY_DATABASE, table_data=input_data_bank)
 
 
 for row in data_for_clients_database:
@@ -153,7 +151,8 @@ INSERT INTO Klientai
     '{row.get("Emailas", "")}', '{row.get("Shipping_adress", "")}', '{row.get("PVM", "")}', '{row.get("Apmokejimo_terminas", "")}',
     '{row.get("Atsakingas", "")}', '{row.get("Telefonas", "")}', '{row.get("Bankas", "")}', '{row.get("Išankstinis_mok", "")}')
  """
-    execute_query(database_name=MY_DATABASE, query=input_data_clients)
+    create_database_table(database_name=MY_DATABASE, table_data=input_data_clients)
+
 
 
 for row in data_for_orders_database:
@@ -170,7 +169,8 @@ for row in data_for_orders_database:
        '{row.get("shipping_adress", "")}', '{row.get("Invoice", "")}'
     )
     """
-    execute_query(database_name=MY_DATABASE, query=input_data_orders)
+    create_database_table(database_name=MY_DATABASE, table_data=input_data_orders)
+
 
 table_name_bank = "Bankai"
 table_name_orders = "Uzsakymai"
@@ -207,7 +207,7 @@ for n in data_for_invoice:
 
 print("Testuojame funkcija")
 
-duomenys = get_data_for_invoice_list(database_name=MY_DATABASE, date="2025/02/07")
+duomenys = get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07")
 for n in duomenys:
     print(n)
 
