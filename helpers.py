@@ -48,7 +48,14 @@ def get_data_for_invoice(database_name, date):
 def get_clients_names(shipping_data):
     client_names_list = []
     for data in shipping_data:
-        customer_name = data.get('Customer')  # Gauname 'Customer' reikšmę iš žodyno
+        if isinstance(data, dict):  # Patikriname, ar 'data' yra žodynas
+            customer_name = data.get("Customer")
+        elif (
+            isinstance(data, tuple) and len(data) > 0
+        ):  # Jei tuple, imame pirmą elementą
+            customer_name = data[0]
+        else:
+            continue  # Jei neatitinka nė vieno varianto, praleidžiame
         if customer_name and customer_name not in client_names_list:
             client_names_list.append(customer_name)
     return client_names_list
@@ -61,21 +68,21 @@ def get_data_for_invoice_list(database_name, date):
         c.execute(f"SELECT * FROM Uzsakymai WHERE Shipping_day = '{date}'")
         data = c.fetchall()
         return [dict(row) for row in data]  # Konvertuojam į dict sąrašą
-    
+
+
 def get_client_data_for_invoice(database_name, name):
-  with sqlite3.connect(database_name) as conn:
+    with sqlite3.connect(database_name) as conn:
         c = conn.cursor()
         data = c.execute(
             f"SELECT * From  Klientai WHERE Klientas = '{name}' "
         ).fetchall()
         return data
-  
+
+
 def get_invoice_data_by_client_name(data, name):
     data_for_invoice = []
     for d in data:
         customer_name = d.get("Customer")
-        if name == customer_name :
+        if name == customer_name:
             data_for_invoice.append(d)
     return data_for_invoice
-
-

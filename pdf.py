@@ -1,10 +1,12 @@
 import pdfkit
 from datetime import datetime, timedelta
-from funkcijos import (get_data_for_invoice_list,
-                      get_client_data_for_invoice,
-                      get_invoice_data_by_client_name,
-                      get_clients_names
-                      )
+from helpers import (
+    get_data_for_invoice_list,
+    get_client_data_for_invoice,
+    get_invoice_data_by_client_name,
+    get_clients_names,
+)
+from debug_helpers import checking_type_and_data
 from datetime import datetime
 import base64
 
@@ -16,16 +18,6 @@ with open(image_path, "rb") as img_file:
 
 html_image = f'<img src="data:image/jpeg;base64,{base64_string}" alt="Company Logo" style="max-width: 100%;">'
 
-#Atspausdinam paveiksliuko koda - nukopijamui i HTML faila
-#print()
-#print("Paveiskliuko Testas 3")
-#print()
-#print(html_image)
-#print()
-#print("Paveiskliuko Testas 3 ")
-#print()
-
-
 
 # client_name = input(str("Iveskite klienta kuriam israsinesite saskaita"))
 
@@ -33,72 +25,41 @@ new_data = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
 
 invoice_number = "DOT" + datetime.now().strftime("%Y-%m-%d")
 
-
-
-
-
-
-
-
-client_data_for_invoice = get_client_data_for_invoice(database_name="dotekas.db", name = "Preveda AS")
-#print()
-#print()
-#print(type(client_data_for_invoice))
-#print()
-#print(client_data_for_invoice)
-#print()
-#print()
+client_data_for_invoice = get_client_data_for_invoice(
+    database_name="dotekas.db", name="J. de Jager & Zonen BV"
+)
 
 data_for_todays_shipment = get_data_for_invoice_list(
     database_name="dotekas.db", date="2025/02/07"
 )
 
-print("Visi duomenys siandienos isvezimui")
-print()
-print(type(data_for_todays_shipment))
-print()
-for n in data_for_todays_shipment:
-    print(n)
-    print()
+checking_type_and_data(data=data_for_todays_shipment)
 
-clients_names_for_invoice= get_clients_names(data_for_todays_shipment)
-print("Klientu vardai kuriu uzsakymai isvaziuoja siandiena")
-print()
-print(type(clients_names_for_invoice))
-print()
-print(clients_names_for_invoice)
-print()
+clients_names_for_invoice = get_clients_names(data_for_todays_shipment)
 
-data_for_invoice = get_invoice_data_by_client_name(data=data_for_todays_shipment, name="J. de Jager & Zonen BV")
-
-print()
-print("Siandienos isvezimo duomenys pagal klineta")
-print()
-for n in data_for_invoice:
-    print(n)
-print()
-print("Pabaiga")
-print()
-
-
-
-
+data_for_invoice = get_invoice_data_by_client_name(
+    data=data_for_todays_shipment, name="J. de Jager & Zonen BV"
+)
 
 html_table_row = ""
 for item in data_for_invoice:
     print(type(item), item)  # Debug info
-
     # Jei 'Price_Eur' tuščias, nustatome į 0 ir pašaliname simbolius
-    price = float(item['Price_Eur'].replace("€", "").replace(",", "").strip()) if item['Price_Eur'] else 0
-
+    price = (
+        float(item["Price_Eur"].replace("€", "").replace(",", "").strip())
+        if item["Price_Eur"]
+        else 0
+    )
     # Jei 'Discount' tuščias, nustatome į 0 ir pašaliname simbolius
-    discount = float(item['Discount'].replace("%", "").strip()) / 100 if item['Discount'] else 0  
-
+    discount = (
+        float(item["Discount"].replace("%", "").strip()) / 100
+        if item["Discount"]
+        else 0
+    )
     # Apskaičiuojame kainą su nuolaida
     discounted_price = price * (1 - discount)
-
     # Apskaičiuojame bendrą sumą
-    total_price = discounted_price * item['Qty']
+    total_price = discounted_price * item["Qty"]
 
     html_table_row += f"""
     <tr>
@@ -111,7 +72,27 @@ for item in data_for_invoice:
     </tr>
     """
 
+subtotal = sum(
+    (
+        float(item["Price_Eur"].replace("€", "").replace(",", "").strip())
+        if item["Price_Eur"].strip()
+        else 0.0
+    )
+    * (
+        1
+        - (
+            float(item["Discount"].replace("%", "").strip()) / 100
+            if item["Discount"].strip()
+            else 0
+        )
+    )
+    * item["Qty"]
+    for item in data_for_invoice
+)
 
+# Apskaičiuojame TAX sumą (jei nėra, nustatome 0)
+tax_value = client_data_for_invoice[0][11].replace("%", "").replace(",", "").strip()
+tax = float(tax_value) if tax_value else 0.0  # Jei tuščia, priskiriame 0.0
 
 
 invoice_html_data = f"""
@@ -251,7 +232,7 @@ invoice_html_data = f"""
                             Subtotal
                         </td>
                         <td align="right" width="20%" style="padding: 5px;">
-                            1500.00   
+                           {subtotal:.2f} 
                         </td>
                     </tr>
                     <tr>
@@ -259,7 +240,7 @@ invoice_html_data = f"""
                             + TAX    
                         </td>
                         <td align="right" width="20%" style="padding: 5px;">
-                            5.00   
+                         {client_data_for_invoice[0][11]}
                         </td>
                     </tr>
                     <tr>
@@ -270,7 +251,7 @@ invoice_html_data = f"""
                         </td>
                         <td align="right" width="20%" style="border-top: 2px solid #eee; padding: 8px;">
                             <strong style="font-size: 16pt;">
-                                USD 1495.00
+                               {(subtotal + tax):.2f}
                             </strong>
                         </td>
                     </tr>
@@ -290,10 +271,7 @@ invoice_html_data = f"""
 </body>
 
 </html>
-
-
 """
-
 
 options = {"no-images": ""}
 
@@ -301,14 +279,9 @@ config = pdfkit.configuration(
     wkhtmltopdf=r"C:\Program Files (x86)\wkhtmltopdf\bin\wkhtmltopdf.exe"
 )
 
-# Konvertuojame HTML failą į PDF
-# pdfkit.from_file("invoice.html", "invoice_html.pdf", configuration=config, options=options)
-
 with open("invoice_test.html", "w", encoding="utf-8") as file:
     file.write(invoice_html_data)
 
-# Konvertuojame HTML į PDF
 pdfkit.from_file("invoice_test.html", "invoice_test.pdf")
-
 
 print("PDF sukurtas sėkmingai!")

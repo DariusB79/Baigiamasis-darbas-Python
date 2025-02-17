@@ -12,3 +12,13 @@ def print_extracted_data(extracted_data):
             print(row)
         else:
             print("Nera duomenu - tuscia lentele")
+
+
+def checking_type_and_data(data):
+    print()
+    print("Duomenu tipas")
+    print(type(data))
+    print()
+    for n in data:
+        print(n)
+        print()

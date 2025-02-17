@@ -12,8 +12,8 @@ from tabulate import tabulate
 from IPython.display import HTML
 import logging
 import pdfkit
-from debug_functions import print_data_for_database, print_extracted_data
-from funkcijos import (
+from debug_helpers import print_data_for_database, print_extracted_data
+from helpers import (
     execute_query,
     preparation_data_for_database,
     create_database_table,
@@ -196,7 +196,6 @@ print("Data")
 print(get_clients_names(data_for_invoice))
 print("Data")
 
-
 print("Klientu sarasas")
 print(get_clients_names(shipping_data=data_for_invoice))
 
@@ -212,12 +211,11 @@ duomenys = get_data_for_invoice_list(database_name=MY_DATABASE, date="2025/02/07
 for n in duomenys:
     print(n)
 
-
 # if __name__ == "__main__":
 gmail_client = GmailClient()
 gmail_client.send_email_with_attachment(
     to_email="d.balsevicius@gmail.com",
-    subject="Test Email with PDF Attachment",
-    content="Please find the attached PDF.",
+    subject="Please find atached invoice for your orders",
+    content="Hello,\n \n Please find atached invoice for your orders \n\n Have a nice day \n BR, \n Darius Balsevicius",
     file_path=r"C:\Users\HP\OneDrive\Desktop\phyton_mokymai\Paskaitos\_baigiamasis_darbas\invoice_test.pdf",
 )
