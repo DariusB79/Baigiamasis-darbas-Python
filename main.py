@@ -80,9 +80,9 @@ HEADERS_BANK = ["Name", "Code", "SWIFT", "Account_Nr"]
 data_orders = sheets_client.get_sheet_data(spreadsheet_id_orders, range_name_orders)
 data_clients = sheets_client.get_sheet_data(spreadsheet_id_clients, range_name_clients)
 data_bank = sheets_client.get_sheet_data(spreadsheet_id_bank, range_name_bank)
-print_extracted_data(extracted_data=data_orders)
-print_extracted_data(extracted_data=data_clients)
-print_extracted_data(extracted_data=data_bank)
+#print_extracted_data(extracted_data=data_orders)
+#print_extracted_data(extracted_data=data_clients)
+#print_extracted_data(extracted_data=data_bank)
 
 sorted_orders = []
 if data_orders:
@@ -107,24 +107,24 @@ if data_orders:
     else:
         print("Nera duomenu")
 
-print_extracted_data(sorted_orders)
+#print_extracted_data(sorted_orders)
 
 data_for_orders_database = preparation_data_for_database(
     header=HEADERS_ORDERS, input_data=sorted_orders
 )
-print_data_for_database(data_for_orders_database)
+#print_data_for_database(data_for_orders_database)
 
 
 data_for_clients_database = preparation_data_for_database(
     header=HEADERS_CLIENTS, input_data=data_clients
 )
-print_data_for_database(data_for_database=data_for_clients_database)
+#print_data_for_database(data_for_database=data_for_clients_database)
 
 
 data_for_bank_database = preparation_data_for_database(
     header=HEADERS_BANK, input_data=data_bank
 )
-print_data_for_database(data_for_database=data_for_bank_database)
+#print_data_for_database(data_for_database=data_for_bank_database)
 
 
 create_database_table(database_name=MY_DATABASE, table_data=table_orders)
@@ -171,7 +171,6 @@ for row in data_for_orders_database:
     """
     create_database_table(database_name=MY_DATABASE, table_data=input_data_orders)
 
-
 table_name_bank = "Bankai"
 table_name_orders = "Uzsakymai"
 table_name_clients = "Klientai"
@@ -179,39 +178,13 @@ check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_ba
 check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_orders)
 check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_clients)
 
-
 # shipping_date = input(str("Iveskite norimo isvezimo data"))
 data_for_invoice = get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07")
-
-
-print(get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07"))
-
-print("Data for invoice")
-for n in data_for_invoice:
-    print(n[0], n[1], n[2])
-
-print("Data for invoice - PABAIGA")
-
-print("Data")
-print(get_clients_names(data_for_invoice))
-print("Data")
-
-print("Klientu sarasas")
-print(get_clients_names(shipping_data=data_for_invoice))
-
-
-print("Duomenys saskaitos israsymui")
-for n in data_for_invoice:
-    print(n)
-    print()
-
-print("Testuojame funkcija")
 
 duomenys = get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07")
 for n in duomenys:
     print(n)
 
-# if __name__ == "__main__":
 gmail_client = GmailClient()
 gmail_client.send_email_with_attachment(
     to_email="d.balsevicius@gmail.com",
