@@ -1,6 +1,9 @@
 /creds
 dotekas.db
-*pdf
-*jpg
+*.pdf
+*.jpg
 testas.py
+.env
+__pycache__
+
 
