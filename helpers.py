@@ -1,11 +1,12 @@
 import sqlite3
 
-
 SELECT_FROM_UZSAKYMAI_QUERY = "SELECT * FROM Uzsakymai WHERE Shipping_day = '{date}'"
 
 
-def execute_sql_query(database_name, query):
+def execute_sql_query(database_name, query, as_dict=False):
     with sqlite3.connect(database_name) as conn:
+        if as_dict:
+            conn.row_factory = sqlite3.Row  # Leidžia gauti duomenis kaip žodyną
         c = conn.cursor()
         c.execute(query)
         conn.commit()
@@ -13,19 +14,11 @@ def execute_sql_query(database_name, query):
             return c.fetchall()
 
 
-def create_database_table(database_name, table_data):
-    return execute_sql_query(database_name=database_name, query=table_data)
-
-
-def check_data_in_database_table(database_name, table_name):
-    return execute_sql_query(
-        database_name=database_name, query=f"SELECT * FROM {table_name}"
-    )
-
-
 def get_data_for_invoice(database_name, date, as_dict=False):
     r = execute_sql_query(
-        database_name=database_name, query=SELECT_FROM_UZSAKYMAI_QUERY.format(date=date)
+        database_name=database_name,
+        query=SELECT_FROM_UZSAKYMAI_QUERY.format(date=date),
+        as_dict=True,
     )
     return [dict(row) for row in r] if as_dict else r
 
@@ -35,39 +28,6 @@ def get_client_data_for_invoice(database_name, name):
         database_name=database_name,
         query=f"SELECT * From  Klientai WHERE Klientas = '{name}' ",
     )
-
-
-# def create_database_table(database_name, table_data):
-#     with sqlite3.connect(database_name) as conn:
-#         c = conn.cursor()
-#         c.execute(table_data)
-
-# def check_data_in_database_table(database_name, table_name):
-#     with sqlite3.connect(database_name) as conn:
-#         c = conn.cursor()
-#         c.execute(f"SELECT * FROM {table_name}")
-#         rows = c.fetchall()
-#         for row in rows:
-#             print(row)
-
-# def get_data_for_invoice(database_name, date, as_dict=False):
-#     with sqlite3.connect(database_name) as conn:
-#         if as_dict:
-#             conn.row_factory = sqlite3.Row  # Leidžia gauti duomenis kaip žodyną
-#         c = conn.cursor()
-#         c.execute(f"SELECT * FROM Uzsakymai WHERE Shipping_day = ?", (date,))
-#         data = c.fetchall()
-#         return [dict(row) for row in data] if as_dict else data
-
-
-# def get_client_data_for_invoice(database_name, name):
-#     with sqlite3.connect(database_name) as conn:
-#         c = conn.cursor()
-#         data = c.execute(
-#             f"SELECT * From  Klientai WHERE Klientas = '{name}' "
-#         ).fetchall()
-#         return data
-
 
 def preparation_data_for_database(header, input_data):
     output_data = []

@@ -12,13 +12,10 @@ from tabulate import tabulate
 from IPython.display import HTML
 import logging
 import pdfkit
-from debug_helpers import print_data_for_database, print_extracted_data
 from helpers import (
     preparation_data_for_database,
-    create_database_table,
-    check_data_in_database_table,
     get_data_for_invoice,
-    get_clients_names,
+    execute_sql_query,
 )
 from klases import GoogleSheetsClient, GmailClient
 
@@ -37,6 +34,17 @@ sheets_client = GoogleSheetsClient()
 logging.warning("Google Sheets API authenticated successfully!")
 
 MY_DATABASE = "dotekas.db"
+
+
+def create_database_table(database_name, table_data):
+    return execute_sql_query(database_name=database_name, query=table_data)
+
+
+def check_data_in_database_table(database_name, table_name):
+    return execute_sql_query(
+        database_name=database_name, query=f"SELECT * FROM {table_name}"
+    )
+
 
 table_orders = "CREATE TABLE IF NOT EXISTS Uzsakymai (Customer text, Order_Nr text, Shipping_day text, Project text, Code text, Ver text, Description text, Description_LT text, Qty integer, Measure text, Discount integer, Price_Eur  float, Shipping_adress text, Invoice integer)"
 
@@ -107,40 +115,36 @@ if data_orders:
     else:
         print("Nera duomenu")
 
-# print_extracted_data(sorted_orders)
-
 data_for_orders_database = preparation_data_for_database(
     header=HEADERS_ORDERS, input_data=sorted_orders
 )
-# print_data_for_database(data_for_orders_database)
-
 
 data_for_clients_database = preparation_data_for_database(
     header=HEADERS_CLIENTS, input_data=data_clients
 )
-# print_data_for_database(data_for_database=data_for_clients_database)
-
 
 data_for_bank_database = preparation_data_for_database(
     header=HEADERS_BANK, input_data=data_bank
 )
 # print_data_for_database(data_for_database=data_for_bank_database)
 
-
-create_database_table(database_name=MY_DATABASE, table_data=table_orders)
-create_database_table(database_name=MY_DATABASE, table_data=table_clients)
-create_database_table(database_name=MY_DATABASE, table_data=table_bank)
+# create_database_table
+execute_sql_query(database_name=MY_DATABASE, query=table_orders)
+execute_sql_query(database_name=MY_DATABASE, query=table_clients)
+execute_sql_query(database_name=MY_DATABASE, query=table_bank)
 
 
 for row in data_for_bank_database:
     input_data_bank = f"""INSERT INTO Bankai (Name, Code, SWIFT, Account_Nr)
                 VALUES ('{row["Name"]}', '{row["Code"]}', '{row["SWIFT"]}', '{row["Account_Nr"]}')"""
     print(input_data_bank)  # Tikriname, ar teisingai sugeneruoti SQL įrašai
-    create_database_table(database_name=MY_DATABASE, table_data=input_data_bank)
+    execute_sql_query(database_name=MY_DATABASE, query=input_data_bank)
 
 
 for row in data_for_clients_database:
-    input_data_clients = input_data_clients = f"""
+    input_data_clients = (
+        input_data_clients
+    ) = f"""
 INSERT INTO Klientai
    (Klientas, Code, "Vat_code", Adresas, Emailas, "Shipping_adress", PVM,
     "Apmokejimo_terminas", Atsakingas, Telefonas, Bankas, "Išankstinis_mok")
@@ -149,7 +153,7 @@ INSERT INTO Klientai
     '{row.get("Emailas", "")}', '{row.get("Shipping_adress", "")}', '{row.get("PVM", "")}', '{row.get("Apmokejimo_terminas", "")}',
     '{row.get("Atsakingas", "")}', '{row.get("Telefonas", "")}', '{row.get("Bankas", "")}', '{row.get("Išankstinis_mok", "")}')
  """
-    create_database_table(database_name=MY_DATABASE, table_data=input_data_clients)
+    execute_sql_query(database_name=MY_DATABASE, query=input_data_clients)
 
 
 for row in data_for_orders_database:
@@ -166,21 +170,18 @@ for row in data_for_orders_database:
        '{row.get("shipping_adress", "")}', '{row.get("Invoice", "")}'
     )
     """
-    create_database_table(database_name=MY_DATABASE, table_data=input_data_orders)
+    execute_sql_query(database_name=MY_DATABASE, query=input_data_orders)
+
 
 table_name_bank = "Bankai"
 table_name_orders = "Uzsakymai"
 table_name_clients = "Klientai"
-check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_bank)
-check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_orders)
-check_data_in_database_table(database_name=MY_DATABASE, table_name=table_name_clients)
 
-# shipping_date = input(str("Iveskite norimo isvezimo data"))
-data_for_invoice = get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07")
-
-duomenys = get_data_for_invoice(database_name=MY_DATABASE, date="2025/02/07")
-for n in duomenys:
-    print(n)
+execute_sql_query(database_name=MY_DATABASE, query=f"SELECT * FROM {table_name_bank}")
+execute_sql_query(database_name=MY_DATABASE, query=f"SELECT * FROM {table_name_orders}")
+execute_sql_query(
+    database_name=MY_DATABASE, query=f"SELECT * FROM {table_name_clients}"
+)
 
 gmail_client = GmailClient()
 gmail_client.send_email_with_attachment(

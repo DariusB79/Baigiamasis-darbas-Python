@@ -5,10 +5,12 @@ from helpers import (
     get_client_data_for_invoice,
     get_invoice_data_by_client_name,
     get_clients_names,
+    execute_sql_query,
 )
 from debug_helpers import checking_type_and_data
 from datetime import datetime
 import base64
+
 
 # Paveiksliuko sutvarkymas:
 image_path = "C:/Users/HP/OneDrive/Desktop/phyton_mokymai/Paskaitos/_baigiamasis_darbas/logo_m.jpg"
@@ -20,7 +22,6 @@ html_image = f'<img src="data:image/jpeg;base64,{base64_string}" alt="Company Lo
 
 
 # client_name = input(str("Iveskite klienta kuriam israsinesite saskaita"))
-
 new_data = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
 
 invoice_number = "DOT" + datetime.now().strftime("%Y-%m-%d")
@@ -28,6 +29,11 @@ invoice_number = "DOT" + datetime.now().strftime("%Y-%m-%d")
 client_data_for_invoice = get_client_data_for_invoice(
     database_name="dotekas.db", name="J. de Jager & Zonen BV"
 )
+
+print("kliento duomenys saskaitai")
+checking_type_and_data(client_data_for_invoice)
+print()
+print()
 
 data_for_todays_shipment = get_data_for_invoice(
     database_name="dotekas.db", date="2025/02/07", as_dict=True
@@ -72,27 +78,19 @@ for item in data_for_invoice:
     </tr>
     """
 
+
 subtotal = sum(
-    (
-        float(item["Price_Eur"].replace("€", "").replace(",", "").strip())
-        if item["Price_Eur"].strip()
-        else 0.0
-    )
-    * (
-        1
-        - (
-            float(item["Discount"].replace("%", "").strip()) / 100
-            if item["Discount"].strip()
-            else 0
-        )
-    )
+    float(item["Price_Eur"].replace("€", "").replace(",", "").strip() or 0.0)
+    * (1 - float(item["Discount"].replace("%", "").strip() or 0) / 100)
     * item["Qty"]
     for item in data_for_invoice
 )
 
+
+
 # Apskaičiuojame TAX sumą (jei nėra, nustatome 0)
-tax_value = client_data_for_invoice[0][11].replace("%", "").replace(",", "").strip()
-tax = float(tax_value) if tax_value else 0.0  # Jei tuščia, priskiriame 0.0
+tax_value = client_data_for_invoice[0][6].replace("%", "").replace(",", "").strip()
+tax = (float(tax_value) if tax_value else 0.0)/10000 +1 # Jei tuščia, priskiriame 0.0
 
 
 invoice_html_data = f"""
@@ -237,10 +235,10 @@ invoice_html_data = f"""
                     </tr>
                     <tr>
                         <td align="right" style="padding: 5px;">
-                            + TAX    
+                            + VAT    
                         </td>
                         <td align="right" width="20%" style="padding: 5px;">
-                         {client_data_for_invoice[0][11]}
+                         {client_data_for_invoice[0][6]}
                         </td>
                     </tr>
                     <tr>
@@ -251,7 +249,7 @@ invoice_html_data = f"""
                         </td>
                         <td align="right" width="20%" style="border-top: 2px solid #eee; padding: 8px;">
                             <strong style="font-size: 16pt;">
-                               {(subtotal + tax):.2f}
+                               {(subtotal * tax):.2f}
                             </strong>
                         </td>
                     </tr>
